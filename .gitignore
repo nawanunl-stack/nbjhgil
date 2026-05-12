@@ -1,15 +1,33 @@
-node_modules/
-.env
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
-/.next/
-/out/
-/build
-npm-debug.log*
-.vercel
-*.tsbuildinfo
-next-env.d.ts
-.DS_Store
-Thumbs.db
+name: Deploy to Vercel
+
+on:
+  push:
+    branches: ['main', 'master'] # จัดการกับการทำงานของ_branch_คุณ
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18.x' # หรือเวอร์ชันที่จำเป็นสำหรับโปรเจกต์ของคุณ
+
+      - name: Install dependencies  
+        run: npm ci # หรือ yarn install / pnpm install ตามที่คุณใช้
+
+      - name: Build project
+        run: npm run build # สร้างโปรเจกต์
+
+      - name: Deploy to Vercel
+        uses: amondnet/vercel-action@v21
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-team-id: ${{ secrets.VERCEL_TEAM_ID }} # หากคุณใช้ Team के Vercel
+          working-directory: . # หรือ caminho ของโฟลเดอร์โครงการของคุณ
+          github-comment: false # ใส่ความคิดเห็นบน PR เกี่ยวกับผลลัพธ์การ deploy
+          prod-environment: true # สร้างเป็น Environment Production บน Vercel
