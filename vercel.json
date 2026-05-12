@@ -1,0 +1,14 @@
+{
+  "framework": "nextjs",
+  "buildCommand": "next build",
+  "crons": [
+    {
+      "path": "/api/cron/fetch-laws",
+      "schedule": "0 8 * * 1"
+    },
+    {
+      "path": "/api/cron/send-reminders",
+      "schedule": "0 9 * * *"
+    }
+  ]
+}
